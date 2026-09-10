@@ -1,0 +1,42 @@
+name: GiftLink CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+
+      - name: Run backend tests
+        working-directory: backend
+        run: npm test
+
+      - name: Verify project files
+        run: |
+          test -f backend/app.js
+          test -f backend/db.js
+          test -f backend/index.js
+          test -f backend/routes/giftRoutes.js
+          test -f backend/routes/searchRoutes.js
+          test -f backend/routes/authRoutes.js
+
+      - name: CI/CD completed
+        run: echo "GiftLink CI/CD pipeline completed successfully"
